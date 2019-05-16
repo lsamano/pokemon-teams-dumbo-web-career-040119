@@ -26,10 +26,7 @@ const addTrainersToDOM = trainers => {
 const getAllTrainers = () => {
   fetch(TRAINERS_URL)
   .then(res => res.json())
-  .then(data => {
-    console.log("Trainers", data);
-    addTrainersToDOM(data)
-  })
+  .then(data => addTrainersToDOM(data))
 }
 
 
@@ -58,9 +55,6 @@ const addNewPokemon = trainer => {
 }
 
 const releasePokemon = pokemon => {
-  console.log(pokemon)
-  // send delete fetch with dataset['pokemon-id']
-  // debugger
   return fetch(`${POKEMONS_URL}/${pokemon.dataset.pokemonId}`, {
     method: "DELETE",
     headers: {
@@ -69,22 +63,21 @@ const releasePokemon = pokemon => {
     }
   })
   .then(res => res.json())
-  .then(data => {
-    console.log(data)
-    pokemon.parentNode.remove()
-  })
+  .then(data => pokemon.parentNode.remove())
 
+}
+
+const handleClick = event => {
+  if (event.target.classList.contains('add-pokemon')) {
+    addNewPokemon(event.target.parentNode)
+  } else if (event.target.classList.contains('release')) {
+    releasePokemon(event.target)
+  }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   const mainContainer = document.querySelector('main')
-  mainContainer.addEventListener('click', () => {
-    if (event.target.classList.contains('add-pokemon')) {
-      addNewPokemon(event.target.parentNode)
-    } else if (event.target.classList.contains('release')) {
-      releasePokemon(event.target)
-    }
-  })
+  mainContainer.addEventListener('click', handleClick)
 
   getAllTrainers()
   // End of DOMContentLoaded
